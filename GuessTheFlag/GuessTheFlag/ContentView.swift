@@ -26,9 +26,10 @@ struct ContentView: View {
             .ignoresSafeArea()
             VStack(alignment: .center, spacing: 5) {
                 Text("Guess The Flag")
-                    .font(.title)
-                    .foregroundStyle(.white)
-                    .fontWeight(.heavy)
+                    .customStyle()
+//                    .font(.title)
+//                    .foregroundStyle(.white)
+//                    .fontWeight(.heavy)
                     .padding()
 
                 Section {
@@ -43,14 +44,9 @@ struct ContentView: View {
                         }
                         VStack(alignment: .center, spacing: 20) {
                             ForEach(0...2, id: \.self) { index in
-                                Button {
+                                FlagView(onFlagTapped: {
                                     flagTapped(index: index)
-                                } label: {
-                                    Image(countries[index])
-                                        .renderingMode(.original)
-                                        .clipShape(Capsule())
-                                        .shadow(radius: 5)
-                                }
+                                }, countryName: countries[index])
                             }
                         }
                     }.padding()
@@ -102,5 +98,37 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+struct FlagView: View {
+    let onFlagTapped: () -> Void
+    //let index: Int
+    let countryName: String
+
+    var body: some View {
+        Button {
+            onFlagTapped()
+        } label: {
+            Image(countryName)
+                .renderingMode(.original)
+                .clipShape(Capsule())
+                .shadow(radius: 5)
+        }
+    }
+}
+
+struct CustomText: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .foregroundColor(.blue)
+            .font(.largeTitle).bold()
+
+    }
+}
+
+extension View {
+    func customStyle() -> some View {
+        modifier(CustomText())
     }
 }
